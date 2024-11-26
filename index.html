@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temporary Email</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="bg-black text-green-500 h-screen flex flex-col items-center justify-center">
+    <!-- Main Content -->
+    <div id="main-content" class="bg-gray-900 text-green-500 p-6 rounded-lg shadow-lg w-full max-w-4xl h-full flex flex-col justify-between">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-xl font-semibold">Temp Mail</h1>
+            <div class="relative">
+                <button id="menu-button" class="bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Email Address Input -->
+        <div class="bg-gray-800 p-4 rounded-lg flex items-center justify-between mb-4">
+            <input id="addr" class="bg-transparent text-lg w-full outline-none" readonly>
+        </div>
+
+        <!-- Info Text -->
+        <div class="text-center text-gray-400 mb-6">
+            <p class="text-sm sm:text-base">Forget about spam, advertising mailings, hacking and attacking robots. Keep your real mailbox clean and secure. Temp Mail provides temporary, secure, anonymous, free, disposable email address.</p>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
+            <button onclick="copyEmail()" class="bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
+                <i class="fas fa-copy"></i>
+                <span>Copy</span>
+            </button>
+            <button onclick="refreshMail()" class="bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
+                <i class="fas fa-sync-alt"></i>
+                <span>Refresh</span>
+            </button>
+            <button onclick="genEmail()" class="bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Change</span>
+            </button>
+        </div>
+
+        <!-- Emails Table -->
+        <div class="bg-gray-800 rounded-lg shadow-lg p-4 flex-grow overflow-x-auto">
+            <table class="w-full table-auto">
+                <thead>
+                    <tr class="bg-gray-700 text-green-500 p-2 rounded-t-lg">
+                        <th class="p-2 text-xs sm:text-sm">Mail</th>
+                    </tr>
+                </thead>
+                <tbody id="emails" class="text-gray-400">
+                    <tr>
+                        <td class="text-center p-6">
+                            <i class="fas fa-envelope-open-text text-4xl mb-4"></i>
+                            <p class="text-lg">Your inbox is empty</p>
+                            <p>Waiting for incoming emails</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Fullscreen Menu -->
+    <div id="fullscreen-menu" class="fixed inset-0 bg-gray-900 bg-opacity-95 text-green-500 hidden z-50">
+        <div class="flex flex-col items-center justify-center h-full space-y-4">
+            <button onclick="closeMenu()" class="absolute top-4 right-4 bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+            <a href="javascript:void(0)" onclick="showAbout()" class="block px-4 py-2 text-lg hover:bg-gray-700 rounded">About</a>
+            <a href="javascript:void(0)" onclick="showDeveloper()" class="block px-4 py-2 text-lg hover:bg-gray-700 rounded">Developer</a>
+            <a href="javascript:void(0)" onclick="showVersion()" class="block px-4 py-2 text-lg hover:bg-gray-700 rounded">Version</a>
+            <a href="https://github.com/yhkq1" target="_blank" class="block px-4 py-2 text-lg hover:bg-gray-700 rounded">Follow me on GitHub</a>
+        </div>
+    </div>
+
+    <div id="fullscreen-menu-content" class="fixed inset-0 bg-gray-900 bg-opacity-95 text-green-500 hidden z-50 overflow-y-auto">
+        <div class="flex flex-col items-center justify-center h-full space-y-4 fade-in">
+            <button onclick="backToMenu()" class="absolute top-4 right-4 bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div id="menu-content" class="text-center p-4"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
