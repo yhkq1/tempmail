@@ -14,7 +14,6 @@ A web-based temporary email generator that allows users to create, manage, and v
 
 Check out the live demo of the app here:  
 [Temp Mail Demo](https://yhkq1.github.io/tempmail/)  
-(Replace with actual demo link)
 
 ## 💻 Technologies Used
 
