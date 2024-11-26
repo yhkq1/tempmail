@@ -121,7 +121,7 @@ function showAbout() {
 function showDeveloper() {
     $("#menu-content").html(`
         <h1 class="text-2xl mb-4">Developer</h1>
-        <p>Temp Mail was developed by [Your Name]. Follow me on <a href="https://github.com/mowhn" class="text-blue-500">GitHub</a>.</p>
+        <p>Temp Mail was developed by Janis. Follow me on <a href="https://github.com/yhkq1" class="text-blue-500">GitHub</a>.</p>
     `);
     showFullScreenMenu();
 }
