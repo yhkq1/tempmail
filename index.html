@@ -1,18 +1,48 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Temporary Email</title>
-    <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .copy-animation {
+            animation: copyAnimation 1s ease-in-out;
+        }
+
+        @keyframes copyAnimation {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body class="bg-black text-green-500 h-screen flex flex-col items-center justify-center">
-    <!-- Main Content -->
+
     <div id="main-content" class="bg-gray-900 text-green-500 p-6 rounded-lg shadow-lg w-full max-w-4xl h-full flex flex-col justify-between">
-        <!-- Header -->
         <div class="flex justify-between items-center mb-4">
             <h1 class="text-xl font-semibold">Temp Mail</h1>
             <div class="relative">
@@ -22,17 +52,14 @@
             </div>
         </div>
 
-        <!-- Email Address Input -->
         <div class="bg-gray-800 p-4 rounded-lg flex items-center justify-between mb-4">
             <input id="addr" class="bg-transparent text-lg w-full outline-none" readonly>
         </div>
 
-        <!-- Info Text -->
         <div class="text-center text-gray-400 mb-6">
-            <p class="text-sm sm:text-base">Forget about spam, advertising mailings, hacking and attacking robots. Keep your real mailbox clean and secure. Temp Mail provides you with free and secure email address.</p>
+            <p class="text-sm sm:text-base">Forget about spam, advertising mailings, hacking and attacking robots. Keep your real mailbox clean and secure. Temp Mail provides temporary, secure, anonymous, free, disposable email address.</p>
         </div>
 
-        <!-- Buttons -->
         <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
             <button onclick="copyEmail()" class="bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
                 <i class="fas fa-copy"></i>
@@ -48,7 +75,6 @@
             </button>
         </div>
 
-        <!-- Emails Table -->
         <div class="bg-gray-800 rounded-lg shadow-lg p-4 flex-grow overflow-x-auto">
             <table class="w-full table-auto">
                 <thead>
@@ -69,7 +95,6 @@
         </div>
     </div>
 
-    <!-- Fullscreen Menu -->
     <div id="fullscreen-menu" class="fixed inset-0 bg-gray-900 bg-opacity-95 text-green-500 hidden z-50">
         <div class="flex flex-col items-center justify-center h-full space-y-4">
             <button onclick="closeMenu()" class="absolute top-4 right-4 bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
@@ -78,7 +103,7 @@
             <a href="javascript:void(0)" onclick="showAbout()" class="block px-4 py-2 text-lg hover:bg-gray-700 rounded">About</a>
             <a href="javascript:void(0)" onclick="showDeveloper()" class="block px-4 py-2 text-lg hover:bg-gray-700 rounded">Developer</a>
             <a href="javascript:void(0)" onclick="showVersion()" class="block px-4 py-2 text-lg hover:bg-gray-700 rounded">Version</a>
-            <a href="https://github.com/yhkq1" target="_blank" class="block px-4 py-2 text-lg hover:bg-gray-700 rounded">Follow me on GitHub</a>
+            <a href="https://github.com/mowhn" target="_blank" class="block px-4 py-2 text-lg hover:bg-gray-700 rounded">Follow me on GitHub</a>
         </div>
     </div>
 
@@ -91,6 +116,243 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        let currentEmail = localStorage.getItem('currentEmail') || '';
+
+        function getUserAndDomain() {
+          const addr = $("#addr").val();
+          if (!addr) {
+            alert("Please generate or input an email address first!");
+            return null;
+          }
+
+          const [user, domain] = addr.split("@");
+          return { user, domain };
+        }
+
+        function genEmail() {
+          $.getJSON(
+            "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1",
+            (res) => {
+              currentEmail = res[0];
+              localStorage.setItem('currentEmail', currentEmail);
+              $("#addr").val(currentEmail);
+              refreshMail();
+            }
+          );
+        }
+
+        function refreshMail() {
+          const { user, domain } = getUserAndDomain();
+
+          if (!user || !domain) return;
+
+          const emailsElement = $("#emails");
+          emailsElement.empty();
+          emailsElement.append(`
+            <tr>
+              <td class="text-center p-6">
+                <i class="fas fa-spinner fa-spin text-4xl mb-4"></i>
+                <p class="text-lg">Loading...</p>
+              </td>
+            </tr>
+          `);
+
+          $.getJSON(
+            `https://www.1secmail.com/api/v1/?action=getMessages&login=${user}&domain=${domain}`,
+            (emails) => {
+              emailsElement.empty();
+
+              if (emails.length === 0) {
+                emailsElement.append(`
+                  <tr>
+                    <td class="text-center p-6">
+                      <i class="fas fa-envelope-open-text text-4xl mb-4"></i>
+                      <p class="text-lg">Your inbox is empty</p>
+                      <p>Waiting for incoming emails</p>
+                    </td>
+                  </tr>
+                `);
+              } else {
+                for (const email of emails) {
+                  emailsElement.append(`
+                    <tr>
+                      <td class="p-2 text-xs sm:text-sm break-words">
+                        <a href="javascript:void(0)" onclick="viewEmail('${email.id}', '${email.from}', '${email.subject}', '${email.date}')">
+                          ${email.subject} - ${email.from}
+                        </a>
+                      </td>
+                    </tr>
+                  `);
+                }
+              }
+            }
+          );
+        }
+
+        function viewEmail(id, from, subject, date) {
+          const { user, domain } = getUserAndDomain();
+
+          if (!user || !domain) return;
+
+          $.getJSON(
+            `https://www.1secmail.com/api/v1/?action=readMessage&login=${user}&domain=${domain}&id=${id}`,
+            (email) => {
+              const emailContent = `
+                <div class="bg-gray-900 text-green-500 p-6 rounded-lg shadow-lg w-full max-w-4xl h-full flex flex-col justify-between fade-in overflow-y-auto">
+                    <div class="text-center mb-4">
+                        <h1 class="text-xl font-semibold">Email Details</h1>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg mb-4">
+                        <p><strong>ID:</strong> ${id}</p>
+                        <p><strong>From:</strong> ${from}</p>
+                        <p><strong>Subject:</strong> ${subject}</p>
+                        <p><strong>Date:</strong> ${date}</p>
+                        <p><strong>Content:</strong> ${email.htmlBody || email.body}</p>
+                    </div>
+                    <button onclick="goBack()" class="bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back</span>
+                    </button>
+                </div>
+              `;
+              $('#main-content').html(emailContent);
+            }
+          );
+        }
+
+        function goBack() {
+          $('#main-content').html(`
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-xl font-semibold">Your Temporary Email Address</h1>
+                <div class="relative">
+                    <button id="menu-button" class="bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 p-4 rounded-lg flex items-center justify-between mb-4">
+                <input id="addr" class="bg-transparent text-lg w-full outline-none" readonly value="${currentEmail}">
+            </div>
+
+            <div class="text-center text-gray-400 mb-6">
+                <p class="text-sm sm:text-base">Forget about spam, advertising mailings, hacking and attacking robots. Keep your real mailbox clean and secure. Temp Mail provides temporary, secure, anonymous, free, disposable email address.</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
+                <button onclick="copyEmail()" class="bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
+                    <i class="fas fa-copy"></i>
+                    <span>Copy</span>
+                </button>
+                <button onclick="refreshMail()" class="bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Refresh</span>
+                </button>
+                <button onclick="genEmail()" class="bg-gray-800 text-green-500 px-4 py-2 rounded-lg shadow-md flex items-center justify-center space-x-2 hover:bg-gray-700">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Change</span>
+                </button>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg shadow-lg p-4 flex-grow overflow-x-auto">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-700 text-green-500 p-2 rounded-t-lg">
+                            <th class="p-2 text-xs sm:text-sm">Mail</th>
+                        </tr>
+                    </thead>
+                    <tbody id="emails" class="text-gray-400">
+                        <tr>
+                            <td class="text-center p-6">
+                                <i class="fas fa-envelope-open-text text-4xl mb-4"></i>
+                                <p class="text-lg">Your inbox is empty</p>
+                                <p>Waiting for incoming emails</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+          `);
+          refreshMail();
+          setupMenu();
+        }
+
+        function copyEmail() {
+          const addr = $("#addr").val();
+          navigator.clipboard.writeText(addr).then(() => {
+            const copyButton = $("button:contains('Copy')");
+            copyButton.addClass("copy-animation");
+            setTimeout(() => {
+              copyButton.removeClass("copy-animation");
+            }, 1000);
+          });
+        }
+
+        function setupMenu() {
+          $('#menu-button').on('click', function() {
+            $('#fullscreen-menu').toggleClass('hidden');
+          });
+
+          $('#fullscreen-menu a').on('click', function() {
+            $('#fullscreen-menu').addClass('hidden');
+          });
+        }
+
+        function closeMenu() {
+          $('#fullscreen-menu').addClass('hidden');
+        }
+
+        function backToMenu() {
+          $('#fullscreen-menu-content').addClass('hidden');
+          $('#fullscreen-menu').removeClass('hidden');
+        }
+
+        function showAbout() {
+          const aboutContent = `
+            <div class="text-center fade-in">
+                <h1 class="text-xl font-semibold mb-4">About This Website</h1>
+                <p>This website provides temporary, secure, anonymous, free, disposable email addresses. Forget about spam, advertising mailings, hacking, and attacking robots. Keep your real mailbox clean and secure.</p>
+            </div>
+          `;
+          $('#menu-content').html(aboutContent);
+          $('#fullscreen-menu').addClass('hidden');
+          $('#fullscreen-menu-content').removeClass('hidden');
+        }
+
+        function showDeveloper() {
+          const developerContent = `
+            <div class="text-center fade-in">
+                <h1 class="text-xl font-semibold mb-4">Developer</h1>
+                <p>This website was developed by mowhn.</p>
+            </div>
+          `;
+          $('#menu-content').html(developerContent);
+          $('#fullscreen-menu').addClass('hidden');
+          $('#fullscreen-menu-content').removeClass('hidden');
+        }
+
+        function showVersion() {
+          const versionContent = `
+            <div class="text-center fade-in">
+                <h1 class="text-xl font-semibold mb-4">Version</h1>
+                <p>Current version: 1.0.0</p>
+            </div>
+          `;
+          $('#menu-content').html(versionContent);
+          $('#fullscreen-menu').addClass('hidden');
+          $('#fullscreen-menu-content').removeClass('hidden');
+        }
+
+        $(document).ready(function() {
+          if (currentEmail) {
+            $("#addr").val(currentEmail);
+            refreshMail();
+          } else {
+            genEmail();
+          }
+          setupMenu();
+        });
+    </script>
 </body>
 </html>
