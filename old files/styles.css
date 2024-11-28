@@ -1,0 +1,144 @@
+/* Main Body */
+body {
+    background-color: black;
+    color: #10B981; /* Green */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Main Content */
+#main-content {
+    background-color: #1f2937; /* Dark Gray */
+    color: #10B981; /* Green */
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Header */
+h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+#menu-button {
+    background-color: #374151; /* Darker Gray */
+    color: #10B981; /* Green */
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    space-x: 0.5rem;
+}
+
+#menu-button:hover {
+    background-color: #4B5563; /* Slightly lighter Gray */
+}
+
+/* Email Address Input */
+#addr {
+    background-color: transparent;
+    font-size: 1.125rem;
+    width: 100%;
+    outline: none;
+}
+
+/* Info Text */
+.text-center {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.text-sm, .sm\:text-base {
+    font-size: 1rem;
+}
+
+/* Buttons */
+button {
+    background-color: #374151; /* Dark Gray */
+    color: #10B981; /* Green */
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    space-x: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #4B5563; /* Lighter Gray */
+}
+
+button i {
+    margin-right: 0.5rem;
+}
+
+/* Emails Table */
+table {
+    width: 100%;
+    table-layout: auto;
+}
+
+th {
+    padding: 0.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    background-color: #374151;
+    color: #10B981; /* Green */
+}
+
+td {
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 1rem;
+    color: #D1D5DB; /* Light Gray */
+}
+
+/* Fullscreen Menu */
+#fullscreen-menu {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(31, 41, 47, 0.95); /* Dark Gray with opacity */
+    color: #10B981; /* Green */
+    display: none;
+    z-index: 50;
+}
+
+/* Menu content */
+#fullscreen-menu-content {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(31, 41, 47, 0.95);
+    color: #10B981; /* Green */
+    display: none;
+    z-index: 50;
+    overflow-y: auto;
+}
+
+#fullscreen-menu-content .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+}
