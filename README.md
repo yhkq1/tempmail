@@ -1,4 +1,4 @@
-# Temp Mail
+# Temp Mail (Not working at the moment)
 
 A web-based temporary email generator that allows users to create, manage, and view disposable email addresses. This service helps keep your real inbox clean from spam, advertising, and malicious activity by providing a temporary, anonymous email address.
 
